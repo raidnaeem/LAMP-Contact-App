@@ -7,7 +7,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: copy file via ssh password
+    - name: copy file via ssh key
       uses: appleboy/scp-action@v0.1.7
       with:
         host: 159.65.164.221
