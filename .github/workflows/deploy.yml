@@ -19,6 +19,6 @@ jobs:
           host: 159.65.164.221
           username: root
           key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: ${{ secrets.SSH_PORT }}
-          source: "path/to/local/files"
-          target: "/path/on/remote/server"
+          port: 22
+          source: "."
+          target: "/var/www/html"
