@@ -9,7 +9,7 @@
     } 
     else
     {
-        $stmt = $conn->prepare("UPDATE Contacts SET FirstName=?, LastName=?, Email=?, PhoneNumber=? WHERE ID=? AND UserId=?");
+        $stmt = $conn->prepare("UPDATE Contacts SET FirstName=?, LastName=?, Email=?, Phone=? WHERE ID=? AND UserId=?");
         $stmt->bind_param("ssssii", $inData["firstName"], $inData["lastName"], $inData["email"], $inData["phoneNumber"], $inData["contactId"], $inData["userId"]);
         $stmt->execute();
 
