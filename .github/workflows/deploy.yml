@@ -14,5 +14,5 @@ jobs:
         username: root
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
-        source: ""
+        source: "."
         target: "/var/www/html"
