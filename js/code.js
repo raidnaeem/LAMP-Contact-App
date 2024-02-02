@@ -83,6 +83,11 @@ function doRegister() {
     let password = document.getElementById("registerpassword").value;
     let verify = document.getElementById("verifyPassword").value;
 
+    if (!validatePassword(password)) {
+        alert("Invalid password. Password must have a minimum of 6 characters and 1 digit");
+        return;
+    }
+
     if (password != verify) {
 		alert("Passwords do not match");
         return;
