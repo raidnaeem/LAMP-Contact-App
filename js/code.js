@@ -78,26 +78,14 @@ function doRegister() {
     let login = document.getElementById("username").value;
     let password = document.getElementById("registerpassword").value;
     let verify = document.getElementById("verifyPassword").value;
-    let phoneNumber = document.getElementById("phoneNumber").value; // Add this line
-    let emailAddress = document.getElementById("emailAddress").value; // Add this line
 
     if (password != verify) {
 		alert("Passwords do not match");
         return;
     }
 
-    if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
+    if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
         alert("Missing Fields");
-        return;
-    }
-
-	if (!validatePhoneNumber(phoneNumber)) {
-		alert("Invalid phone number (must have 10 digits)");
-        return;
-    }
-
-    if (!validatePassword(password)) {
-        alert("Invalid password (must be at least 6 characters with at least one number)");
         return;
     }
 
@@ -109,8 +97,6 @@ function doRegister() {
         lastName,
         login,
         password,
-        phoneNumber,
-        emailAddress,
         dateCreated  // Add this line for the date created
     };
 
@@ -151,6 +137,63 @@ function doRegister() {
 // EVERYTHING BELOW IS BEYOND LOGIN/SIGNUP NEEDS FIXING!!!
 
 
+// ... (your existing code)
+
+function doAddContact() {
+    let addFirstName = document.getElementById("addFirstName").value;
+    let addLastName = document.getElementById("addLastName").value;
+    let addPhoneNumber = document.getElementById("addPhoneNumber").value;
+    let addEmailAddress = document.getElementById("addEmailAddress").value;
+
+    if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
+        alert("Missing Fields");
+        return;
+    }
+
+    if (!validatePhoneNumber(addPhoneNumber)) {
+        alert("Invalid phone number (must have 10 digits)");
+        return;
+    }
+
+    // You can add more validation checks if needed
+
+    let addData = {
+        userId: userId,
+        firstName: addFirstName,
+        lastName: addLastName,
+        phoneNumber: addPhoneNumber,
+        emailAddress: addEmailAddress,
+    };
+
+    let jsonPayload = JSON.stringify(addData);
+
+    let url = urlBase + '/AddContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let addResult = JSON.parse(xhr.responseText);
+
+                if (addResult.success) {
+                    alert("Contact added successfully!");
+                    // You can also update the UI or perform other actions as needed
+                } else {
+                    alert("Failed to add contact. Please try again.");
+                }
+            }
+        };
+
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.error("Add contact failed: " + err.message);
+    }
+}
+
+
 function doUpdateContactInfo() {
 	let updateUserName = document.getElementById("updateUserName").value;
     let updateFirstName = document.getElementById("updateFirstName").value;
@@ -187,6 +230,8 @@ function doUpdateContactInfo() {
 
                 if (updateResult.success) {
                     alert("Contact information updated successfully!");
+                    doViewInfo();
+
                     // You can also redirect to the home page or perform other actions as needed
                 } else {
                     alert("Failed to update contact information. Please try again.");
@@ -201,52 +246,39 @@ function doUpdateContactInfo() {
 }
 
 
-function saveCookie()
-{
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+function saveCookie() {
+    let minutes = 20;
+    let date = new Date();
+    date.setTime(date.getTime() + (minutes * 60 * 1000));
+    document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",userName=" + userName + ",phoneNumber=" + phoneNumber + ",emailAddress=" + emailAddress + ";expires=" + date.toGMTString();
 }
 
+function readCookie() {
+    userId = -1;
+    let data = document.cookie;
+    let splits = data.split(",");
+    for (var i = 0; i < splits.length; i++) {
+        let thisOne = splits[i].trim();
+        let tokens = thisOne.split("=");
+        if (tokens[0] == "firstName") {
+            firstName = tokens[1];
+        } else if (tokens[0] == "lastName") {
+            lastName = tokens[1];
+        } else if (tokens[0] == "userId") {
+            userId = parseInt(tokens[1].trim());
+        } else if (tokens[0] == "userName") {
+            userName = tokens[1];
+        } else if (tokens[0] == "phoneNumber") {
+            phoneNumber = tokens[1];
+        } else if (tokens[0] == "emailAddress") {
+            emailAddress = tokens[1];
+        }
+    }
 
-function readCookie()
-{
-	userId = -1;
-	let data = document.cookie;
-	let splits = data.split(",");
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
-		if( tokens[0] == "firstName" )
-		{
-			firstName = tokens[1];
-		}
-		else if( tokens[0] == "lastName" )
-		{
-			lastName = tokens[1];
-		}
-		else if( tokens[0] == "userId" )
-		{
-			userId = parseInt( tokens[1].trim() );
-		}
-	}
-	
-	if( userId < 0 )
-	{
-		window.location.href = "index.html";
-	}
+    if (userId < 0) {
+        window.location.href = "index.html";
+    }
 }
-
-
-function displayUserInfo() {
-    // Assuming you have elements with these IDs in your HTML
-    document.getElementById("userFirstName").innerText = firstName;
-    document.getElementById("userLastName").innerText = lastName;
-    document.getElementById("userId").innerText = userId;
-}
-
 
 function doLogout()
 {
@@ -264,16 +296,18 @@ function doLogout()
 function doViewInfo()
 {
 	window.location.href = "info.html";
-	readCookie();
-	displayUserInfo();
 }
 
 
-function doUpdateInfo()
+function doAdd()
 {
 	window.location.href = "update.html";
 }
 
+function doSearch()
+{
+	window.location.href = "search.html";
+}
 
 function doHome()
 {
