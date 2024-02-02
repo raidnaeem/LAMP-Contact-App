@@ -18,6 +18,10 @@ function validatePassword(password) {
     return /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/.test(password);
 }
 
+function validateEmail(emailAddress) {
+    return /^([a-zA-Z0-9._-]+)@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAddress);
+}
+
 // LOGIN AND SIGNUP COMPLETE
 
 function doLogin()
@@ -152,6 +156,11 @@ function doAddContact() {
 
     if (!validatePhoneNumber(addPhoneNumber)) {
         alert("Invalid phone number (must have 10 digits)");
+        return;
+    }
+
+    if (!validateEmail(addEmailAddress)) {
+        alert("Invalid email. Please input a valid email address.");
         return;
     }
 
