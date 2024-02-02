@@ -43,7 +43,7 @@
         }
 
         .home-container,
-        .update-container,
+        .add-container,
         .view-container,
         .search-container {
             width: 48%;
@@ -66,7 +66,7 @@
 
         .home-buttons,
         .search-buttons,
-        .update-buttons,
+        .add-buttons,
         .view-buttons {
             display: flex;
             flex-direction: column;
@@ -91,7 +91,7 @@
         }
 
         button.view-button,
-        button.update-button {
+        button.add-button {
             width: 100%;
         }
 
@@ -114,27 +114,26 @@
     <h2 class="view-title">Welcome to Our Site!</h2>
     <div class="panel-container">
         <div class="view-container">
-            <h2 class="view-title">View Info</h2>
+            <h2 class="view-title">View Contacts</h2>
             <p>Want to Check Your Contact Information?</p>
             <div class="view-buttons">
                 <button class="view-button" onclick="doViewInfo()">View</button>
             </div>
         </div>
 
-        <div class="update-container">
-            <h2 class="update-title">Update Info</h2>
-            <p>Need to Update Any Contact Information?</p>
-            <div class="update-buttons">
-                <button class="update-button" onclick="doUpdateInfo()">Update</button>
+        <div class="add-container">
+            <h2 class="add-title">Add Contacts</h2>
+            <p>Need to Add Any New Contacts?</p>
+            <div class="add-buttons">
+                <button class="add-button" onclick="doAdd()">Add</button>
             </div>
         </div>
 
         <div class="search-container">
             <h2 class="search-title">Search Contacts</h2>
-            <div class="search-message" id="search-message"></div>
-            <input type="text" class="search-input" id="search" name="search" placeholder="Enter First or Last Name">
+            <p>Need to Find A Contact Information?</p>
             <div class="search-buttons">
-                <button onclick="doSearchContacts()">Search</button>
+                <button onclick="doSearch()">Search</button>
             </div>
         </div>
     </div>

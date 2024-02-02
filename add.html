@@ -55,6 +55,12 @@
             flex: 1;
         }
 
+        input {
+            flex: 2;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
         button {
             background-color: #3498db;
             color: #fff;
@@ -107,9 +113,36 @@
         </div>
         
         <div class="panel user-info-container">
-            <h2 class="user-info-title">All Contacts</h2>
-            
-            <button class="update-button" onclick="doUpdateInfo()">Update</button>
+            <h2 class="user-info-title">User Information</h2>
+
+			<div class="user-info-field">
+                <label for="updateUserName">Username:</label>
+                <input type="text" id="updateUserName" name="updateUserName" placeholder="Enter new username">
+            </div>
+
+            <div class="user-info-field">
+                <label for="updateFirstName">First Name:</label>
+                <input type="text" id="updateFirstName" name="updateFirstName" placeholder="Enter new first name">
+            </div>
+
+            <div class="user-info-field">
+                <label for="updateLastName">Last Name:</label>
+                <input type="text" id="updateLastName" name="updateLastName" placeholder="Enter new last name">
+            </div>
+
+			<div class="user-info-field">
+                <label for="updatePhone">Phone:</label>
+                <input type="text" id="updatePhone" name="updatePhone" placeholder="Enter new phone">
+            </div>
+
+			<div class="user-info-field">
+                <label for="updateEmail">Email:</label>
+                <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
+            </div>
+
+            <button class="update-button" onclick="doUpdateContactInfo()">Update</button>
+
+            <!-- Other user info fields... -->
         </div>
 
         <div class="panel">
