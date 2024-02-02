@@ -301,7 +301,7 @@ function doViewInfo()
 
 function doAdd()
 {
-	window.location.href = "update.html";
+	window.location.href = "add.html";
 }
 
 function doSearch()
