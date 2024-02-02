@@ -1,22 +1,206 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>COP 4331 LAMP Stack Demo</title>
-	<script type="text/javascript" src="js/md5.js"></script>
-	<script type="text/javascript" src="js/code.js"></script>
-    <link href="css/styles.css" rel="stylesheet">	
-    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Page</title>
+    <script type="text/javascript" src="js/md5.js"></script>
+    <script type="text/javascript" src="js/code.js"></script>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .form-container {
+            width: 300px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .form-tab {
+            flex: 1;
+            padding: 10px;
+            cursor: pointer;
+            background-color: #3498db;
+            color: #fff;
+            border: 1px solid #fff;
+            border-radius: 5px 5px 0 0;
+        }
+
+        .form-tab.active {
+            background-color: #2980b9;
+            border-color: #fff;
+        }
+
+        .form-group {
+            margin-top: 15px;
+        }
+
+        h2 {
+            text-transform: uppercase;
+        }
+
+        input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: calc(100% - 22px);
+            background-color: #3498db;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        button:hover {
+            background-color: #2980b9;
+            border-color: #fff;
+        }
+
+        .signup-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .signup-group input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .hidden {
+            display: none;
+        }
+    </style>
 </head>
 <body>
 
-<h1 id="title">COP 4331 LAMP Stack Demo</h1>
+    <div id="welcomePage" class="form-container">
+        <h2>Welcome to Our Platform</h2>
+        <p>Sign In or Sign Up to Continue:</p>
+        <button onclick="showLoginForm()">Get Started</button>
+    </div>
 
-<div id="loginDiv">
-	<span id="inner-title">PLEASE LOG IN</span>
-	<input type="text" id="loginName" placeholder="Username" /><br />
-	<input type="password" id="loginPassword" placeholder="Password"/><br />
-	<button type="button" id="loginButton" class="buttons" onclick="doLogin();"> Do It </button>
-	<span id="loginResult"></span>
-</div>
+    <div id="formsContainer" class="hidden">
+        <div class="form-container">
+            <div class="form-tabs">
+                <div class="form-tab active" onclick="showLoginForm()">Login</div>
+                <div class="form-tab" onclick="showSignUpForm()">Sign Up</div>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <div class="error-message" id="error-message"></div>
+                <div class="form-group">
+                    <label for="login">Username:</label>
+                    <input type="text" id="login" name="login" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="loginpassword" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" onclick="doLogin()">Login</button>
+                </div>
+            </form>
+
+            <!-- Sign-up Form -->
+            <form id="signUpForm" class="hidden">
+                <div class="registerResult" id="registerResult"></div>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" name="firstName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" name="lastName" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Phone">Phone:</label>
+                    <input type="text" id="phoneNumber" name="phone" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="Email">Email:</label>
+                    <input type="text" id="emailAddress" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="registerpassword">Password:</label>
+                    <input type="password" id="registerpassword" name="password" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="verifyPassword">Verify Password:</label>
+                    <input type="password" id="verifyPassword" name="verifyPassword" required>
+                </div>
+
+                <div class="form-group">
+                    <button type="button" onclick="doRegister()">Sign Up</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to show the login form and hide the welcome page
+        function showLoginForm() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('formsContainer').classList.remove('hidden');
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('signUpForm').classList.add('hidden');
+            document.querySelector('.form-tab.active').classList.remove('active');
+            document.querySelector('.form-tab:nth-child(1)').classList.add('active');
+        }
+
+        // Function to show the sign-up form and hide the welcome page
+        function showSignUpForm() {
+            document.getElementById('welcomePage').classList.add('hidden');
+            document.getElementById('formsContainer').classList.remove('hidden');
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signUpForm').classList.remove('hidden');
+            document.querySelector('.form-tab.active').classList.remove('active');
+            document.querySelector('.form-tab:nth-child(2)').classList.add('active');
+        }
+    </script>
 
 </body>
 </html>

@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/md5.js"></script>
+    <script type="text/javascript" src="js/code.js"></script>
+    <title>User Info</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start; /* Align content at the top */
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 10px; /* Add margin to separate the panels */
+        }
+
+        .panel {
+            width: 300px;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 10px; /* Add margin between panels */
+        }
+
+        .logout-container {
+            margin-bottom: 10px;
+        }
+
+        .user-info-title {
+            margin-bottom: 20px;
+        }
+
+        .user-info-field {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
+            flex: 1;
+        }
+
+        input {
+            flex: 2;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        button {
+            background-color: #3498db;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button.logout-button {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+
+        button.logout-button:hover {
+            background-color: #c0392b; /* Darker red color on hover */
+            border-color: #c0392b; /* Match border color on hover */
+        }
+
+        button.home-button {
+            background-color: #2ecc71;
+            border-color: #2ecc71;
+            margin-top: 10px; /* Add margin between logout and home button */
+        }
+
+        button.home-button:hover {
+            background-color: #27ae60; /* Darker green color on hover */
+            border-color: #27ae60; /* Match border color on hover */
+        }
+
+        button.update-button {
+            background-color: #3498db;
+            border-color: #3498db;
+            margin-top: 10px; /* Add margin between home and update button */
+        }
+
+        button.update-button:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="panel logout-container">
+            <button class="logout-button" onclick="doLogout()">Logout</button>
+        </div>
+        
+        <div class="panel user-info-container">
+            <h2 class="user-info-title">User Information</h2>
+
+			<div class="user-info-field">
+                <label for="updateUserName">Username:</label>
+                <input type="text" id="updateUserName" name="updateUserName" placeholder="Enter new username">
+            </div>
+
+            <div class="user-info-field">
+                <label for="updateFirstName">First Name:</label>
+                <input type="text" id="updateFirstName" name="updateFirstName" placeholder="Enter new first name">
+            </div>
+
+            <div class="user-info-field">
+                <label for="updateLastName">Last Name:</label>
+                <input type="text" id="updateLastName" name="updateLastName" placeholder="Enter new last name">
+            </div>
+
+			<div class="user-info-field">
+                <label for="updatePhone">Phone:</label>
+                <input type="text" id="updatePhone" name="updatePhone" placeholder="Enter new phone">
+            </div>
+
+			<div class="user-info-field">
+                <label for="updateEmail">Email:</label>
+                <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
+            </div>
+
+            <button class="update-button" onclick="doUpdateContactInfo()">Update</button>
+
+            <!-- Other user info fields... -->
+        </div>
+
+        <div class="panel">
+            <button class="home-button" onclick="doHome()">Return to Home</button>
+        </div>
+
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script type="text/javascript" src="js/md5.js"></script>
+    <script type="text/javascript" src="js/code.js"></script>
+    <title>Home Page</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .logout-button {
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+            width: 50%;
+            padding: 10px;
+            border-radius: 5px;
+            color: #fff;
+            cursor: pointer;
+            margin-bottom: 10px;
+            text-align: center;
+            box-sizing: border-box;
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b; /* Darker red color on hover */
+        }
+
+        .panel-container {
+            display: flex;
+            justify-content: space-between;
+            width: 800px;
+            margin-top: 20px;
+        }
+
+        .home-container,
+        .update-container,
+        .view-container,
+        .search-container {
+            width: 48%;
+            text-align: center;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+            box-sizing: border-box;
+            margin-right: 10px;
+            margin-left: 10px;
+        }
+
+        .home-title,
+        .view-title,
+        .search-title {
+            margin-bottom: 10px;
+        }
+
+        .home-buttons,
+        .search-buttons,
+        .update-buttons,
+        .view-buttons {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        button {
+            width: 100%;
+            background-color: #3498db;
+            color: #fff;
+            border: 2px solid #fff;
+            border-radius: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-bottom: 10px;
+            transition: background-color 0.3s; /* Smooth transition for hover effect */
+        }
+
+        button:hover {
+            background-color: #4682b4; /* Lighter color on hover */
+        }
+
+        button.view-button,
+        button.update-button {
+            width: 100%;
+        }
+
+        p {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        input.search-input {
+            width: calc(100% - 20px);
+            padding: 10px;
+            box-sizing: border-box;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <button class="logout-button" onclick="doLogout()">Logout</button>
+    <h2 class="view-title">Welcome to Our Site!</h2>
+    <div class="panel-container">
+        <div class="view-container">
+            <h2 class="view-title">View Info</h2>
+            <p>Want to Check Your Contact Information?</p>
+            <div class="view-buttons">
+                <button class="view-button" onclick="doViewInfo()">View</button>
+            </div>
+        </div>
+
+        <div class="update-container">
+            <h2 class="update-title">Update Info</h2>
+            <p>Need to Update Any Contact Information?</p>
+            <div class="update-buttons">
+                <button class="update-button" onclick="doUpdateInfo()">Update</button>
+            </div>
+        </div>
+
+        <div class="search-container">
+            <h2 class="search-title">Search Contacts</h2>
+            <div class="search-message" id="search-message"></div>
+            <input type="text" class="search-input" id="search" name="search" placeholder="Enter First or Last Name">
+            <div class="search-buttons">
+                <button onclick="doSearchContacts()">Search</button>
+            </div>
+        </div>
+    </div>
+    <div id="searchResults"></div>
+
+
+</body>
+</html>
