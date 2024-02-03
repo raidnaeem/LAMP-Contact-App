@@ -1,25 +1,53 @@
-<?php
+<?php 
 	$inData = getRequestInfo();
 	
-	$userId = $inData["userId"];
-	$firstName = $inData["firstName"];
-	$lastName = $inData["lastName"];
-	$email = $inData["emailAddress"];
-	$phoneNumber = $inData["phoneNumber"];
+	$FirstName = $inData["FirstName"];
+	$LastName = $inData["LastName"];
+	$Phone = $inData["Phone"];
+	$Email = $inData["Email"];
+	$UserId = $inData["UserId"];
 
-	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
+	$searchCount = 0;
+
+	$conn = new mysqli("localhost", "EatSand", "yurt", "COP4331");
 	if ($conn->connect_error) 
 	{
 		returnWithError( $conn->connect_error );
 	} 
 	else
 	{
-		$stmt = $conn->prepare("INSERT into Contacts (UserId,FirstName,LastName,Email,Phone) VALUES(?,?,?,?,?)");
-		$stmt->bind_param("issss", $userId, $firstName, $lastName, $email, $phoneNumber);
+		$stmt = $conn->prepare("select * from Contacts where (FirstName like ? AND LastName like ?) and UserID=?");
+		$stmt->bind_param("sss", $FirstName, $LastName, $UserId);
 		$stmt->execute();
+		
+		$result = $stmt->get_result();
+
+		while ($row = $result->fetch_assoc())
+		{
+			$searchCount++;
+		}
+		
+		if ($searchCount == 0)
+		{
+			$stmt = $conn->prepare("INSERT into Contacts (FirstName, LastName, Phone, Email, UserId) VALUES(?,?,?,?,?)");
+			$stmt->bind_param("sssss", $FirstName, $LastName, $Phone, $Email, $UserId);
+			
+			if ($stmt->execute())
+			{
+				returnWithInfo( $inData['FirstName'], $inData['LastName'], $inData["Phone"], $inData["Email"], $inData["UserId"] );
+			}
+			else
+			{
+				returnWithError("Failed to add contact");
+			}
+		}
+		else
+		{
+			returnWithError("Contact already exists");
+		}
+
 		$stmt->close();
 		$conn->close();
-		returnWithError("");
 	}
 
 	function getRequestInfo()
@@ -33,15 +61,16 @@
 		echo $obj;
 	}
 
-
-	function returnWithError($err, $id = 0)
+	function returnWithInfo( $firstName, $lastName, $phone, $email, $userId)
 	{
-		if ($err != "") {
-			$retValue = json_encode(array("id" => $id, "error" => $err));
-		} else {
-			$retValue = json_encode(array("id" => $id, "error" => "", "success" => true));
-		}
-		sendResultInfoAsJson($retValue);
+		$retValue = '{"UserId":"' . $userId . '","FirstName":"' . $firstName . '","LastName":"' . $lastName . '","Phone":"' . $phone . '","Email":"' . $email . '","error":""}';
+		sendResultInfoAsJson( $retValue );
+	}
+	
+	function returnWithError( $err )
+	{
+		$retValue = '{"error":"' . $err . '"}';
+		sendResultInfoAsJson( $retValue );
 	}
 	
 ?>
