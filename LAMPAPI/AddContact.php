@@ -4,7 +4,7 @@
 	$userId = $inData["userId"];
 	$firstName = $inData["firstName"];
 	$lastName = $inData["lastName"];
-	$email = $inData["email"];
+	$email = $inData["emailAddress"];
 	$phoneNumber = $inData["phoneNumber"];
 
 	$conn = new mysqli("localhost", "TheBeast", "WeLoveCOP4331", "COP4331");
@@ -32,7 +32,8 @@
 		header('Content-type: application/json');
 		echo $obj;
 	}
-	
+
+
 	function returnWithError($err, $id = 0)
 	{
 		if ($err != "") {
