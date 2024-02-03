@@ -33,10 +33,14 @@
 		echo $obj;
 	}
 	
-	function returnWithError( $err )
+	function returnWithError($err, $id = 0)
 	{
-		$retValue = '{"error":"' . $err . '"}';
-		sendResultInfoAsJson( $retValue );
+		if ($err != "") {
+			$retValue = json_encode(array("id" => $id, "error" => $err));
+		} else {
+			$retValue = json_encode(array("id" => $id, "error" => "", "success" => true));
+		}
+		sendResultInfoAsJson($retValue);
 	}
 	
 ?>
