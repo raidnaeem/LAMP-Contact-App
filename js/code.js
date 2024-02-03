@@ -54,7 +54,7 @@ function doLogin()
 		
 				if( userId < 1 )
 				{		
-					document.getElementById("error-message").innerHTML = "User/Password combination incorrect";
+					document.getElementById("errorMessage").innerHTML = "User/Password combination incorrect";
 					return;
 				}
 		
@@ -70,7 +70,7 @@ function doLogin()
 	}
 	catch(err)
 	{
-		document.getElementById("error-message").innerHTML = err.message;
+		document.getElementById("errorMessage").innerHTML = err.message;
 	}
 
 }
@@ -80,21 +80,21 @@ function doRegister() {
     let firstName = document.getElementById("firstName").value;
     let lastName = document.getElementById("lastName").value;
     let login = document.getElementById("username").value;
-    let password = document.getElementById("registerpassword").value;
+    let password = document.getElementById("registerPassword").value;
     let verify = document.getElementById("verifyPassword").value;
 
     if (!validatePassword(password)) {
-        alert("Invalid password. Password must have a minimum of 6 characters and 1 digit");
+        document.getElementById("errorMessage").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
         return;
     }
 
     if (password != verify) {
-		alert("Passwords do not match");
+        document.getElementById("errorMessage").textContent = "Passwords do not match.";
         return;
     }
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
-        alert("Missing Fields");
+        document.getElementById("errorMessage").textContent = "One or more fields were left blank. Please fill them to proceed.";
         return;
     }
 
@@ -123,7 +123,7 @@ function doRegister() {
                 userId = jsonObject.id;
 
                 if (userId < 1) {
-                    alert("User already exists");
+                    document.getElementById("errorMessage").textContent = "User already exists.";
                     return;
                 }
 
@@ -155,17 +155,17 @@ function doAddContact() {
     let addEmailAddress = document.getElementById("addEmailAddress").value;
 
     if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
-        alert("Missing Fields");
+        document.getElementById("errorMessage").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
     if (!validatePhoneNumber(addPhoneNumber)) {
-        alert("Invalid phone number (must have 10 digits)");
+        document.getElementById("errorMessage").textContent = "Invalid phone number.";
         return;
     }
 
     if (!validateEmail(addEmailAddress)) {
-        alert("Invalid email. Please input a valid email address.");
+        document.getElementById("errorMessage").textContent = "Invalid email. Please enter a valid email address to proceed.";
         return;
     }
 
@@ -225,7 +225,7 @@ function doUpdateContactInfo() {
     let updateEmail = document.getElementById("updateEmail").value;
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
-        alert("Empty Field(s)");
+        document.getElementById("errorMessage").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
@@ -342,7 +342,7 @@ function doSearchContacts() {
     let search = document.getElementById("search").value;
     
     if (!search) {
-        alert("Please enter a search query.");
+        document.getElementById("errorMessage").textContent = "Please enter a search query.";
         return;
     }
 
