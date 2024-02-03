@@ -80,7 +80,7 @@ function doRegister() {
     let firstName = document.getElementById("firstName").value;
     let lastName = document.getElementById("lastName").value;
     let login = document.getElementById("username").value;
-    let password = document.getElementById("registerPassword").value;
+    let password = document.getElementById("registerpassword").value;
     let verify = document.getElementById("verifyPassword").value;
 
     if (!validatePassword(password)) {
