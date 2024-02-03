@@ -119,6 +119,7 @@
 
             <!-- Login Form -->
             <form id="loginForm">
+                <div class="error-message" id="error-message"></div>
                 <div class="form-group">
                     <label for="login">Username:</label>
                     <input type="text" id="login" name="login" required>
@@ -132,12 +133,11 @@
                 <div class="form-group">
                     <button type="button" onclick="doLogin()">Login</button>
                 </div>
-
-                <p id="errorMessage" style="color: red;"></p>
             </form>
 
             <!-- Sign-up Form -->
             <form id="signUpForm" class="hidden">
+                <div class="error-message" id="error-message"></div>
                 <div class="registerResult" id="registerResult"></div>
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
@@ -167,8 +167,6 @@
                 <div class="form-group">
                     <button type="button" onclick="doRegister()">Sign Up</button>
                 </div>
-
-                <p id="errorMessage" style="color: red;"></p>
             </form>
         </div>
     </div>
