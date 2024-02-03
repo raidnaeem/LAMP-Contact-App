@@ -54,7 +54,7 @@ function doLogin()
 		
 				if( userId < 1 )
 				{		
-					document.getElementsByClassName("error-message").innerHTML = "User/Password combination incorrect";
+					document.getElementByID("error-message").innerHTML = "User/Password combination incorrect";
 					return;
 				}
 		
@@ -70,7 +70,7 @@ function doLogin()
 	}
 	catch(err)
 	{
-		document.getElementsByClassName("error-message").innerHTML = err.message;
+		document.getElementByID("error-message").innerHTML = err.message;
 	}
 
 }
@@ -84,17 +84,17 @@ function doRegister() {
     let verify = document.getElementById("verifyPassword").value;
 
     if (!validatePassword(password)) {
-        document.getElementsByClassName("error-message").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
+        document.getElementByID("error-message").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
         return;
     }
 
     if (password != verify) {
-        document.getElementsByClassName("error-message").textContent = "Passwords do not match.";
+        document.getElementByID("error-message").textContent = "Passwords do not match.";
         return;
     }
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
-        document.getElementsByClassName("error-message").textContent = "One or more fields were left blank. Please fill them to proceed.";
+        document.getElementByID("error-message").textContent = "One or more fields were left blank. Please fill them to proceed.";
         return;
     }
 
@@ -123,7 +123,7 @@ function doRegister() {
                 userId = jsonObject.id;
 
                 if (userId < 1) {
-                    document.getElementsByClassName("error-message").textContent = "User already exists.";
+                    document.getElementByID("error-message").textContent = "User already exists.";
                     return;
                 }
 
@@ -155,17 +155,17 @@ function doAddContact() {
     let addEmailAddress = document.getElementById("addEmailAddress").value;
 
     if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
-        document.getElementsByClassName("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
+        document.getElementByID("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
     if (!validatePhoneNumber(addPhoneNumber)) {
-        document.getElementsByClassName("error-message").textContent = "Invalid phone number.";
+        document.getElementByID("error-message").textContent = "Invalid phone number.";
         return;
     }
 
     if (!validateEmail(addEmailAddress)) {
-        document.getElementsByClassName("error-message").textContent = "Invalid email. Please enter a valid email address to proceed.";
+        document.getElementByID("error-message").textContent = "Invalid email. Please enter a valid email address to proceed.";
         return;
     }
 
@@ -225,7 +225,7 @@ function doUpdateContactInfo() {
     let updateEmail = document.getElementById("updateEmail").value;
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
-        document.getElementsByClassName("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
+        document.getElementByID("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
@@ -342,7 +342,7 @@ function doSearchContacts() {
     let search = document.getElementById("search").value;
     
     if (!search) {
-        document.getElementsByClassName("error-message").textContent = "Please enter a search query.";
+        document.getElementByID("error-message").textContent = "Please enter a search query.";
         return;
     }
 
