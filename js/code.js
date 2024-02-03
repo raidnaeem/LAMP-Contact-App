@@ -181,7 +181,6 @@ function doAddContact() {
     // You can add more validation checks if needed
 
     let addData = {
-        userId: userId,
         firstName: addFirstName,
         lastName: addLastName,
         phoneNumber: addPhoneNumber,
