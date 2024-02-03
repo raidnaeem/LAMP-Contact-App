@@ -2,11 +2,8 @@ const urlBase = 'http://cop4331c-group27.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
-let userName = "";
 let firstName = "";
 let lastName = "";
-let phoneNumber = "";
-let emailAddress = "";
 
 function validatePhoneNumber(phone) {
     // Check if phone number has exactly 10 digits
@@ -55,7 +52,6 @@ function doLogin()
 				if( userId < 1 )
 				{		
 					document.getElementById("error-message").innerHTML = "User/Password combination incorrect";
-                    alert("User/Password combination incorrect");
 					return;
 				}
 		
@@ -64,7 +60,7 @@ function doLogin()
 
 				saveCookie();
 	
-				window.location.href = "homepage.html";
+				doHome();
 			}
 		};
 		xhr.send(jsonPayload);
@@ -85,21 +81,17 @@ function doRegister() {
     let verify = document.getElementById("verifyPassword").value;
 
     if (!validatePassword(password)) {
-        document.getElementById("errorMessage").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
-        alert("Invalid password. Please create a password with at least 6 characters and 1 digit.");
+        document.getElementById("error-message").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
         return;
     }
 
     if (password != verify) {
-        document.getElementById("errorMessage").textContent = "Passwords do not match.";
-        alert("Passwords do not match.");
-        
+        document.getElementById("error-message").textContent = "Passwords do not match.";
         return;
     }
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
-        document.getElementById("errorMessage").textContent = "One or more fields were left blank. Please fill them to proceed.";
-        alert("One or more fields were left blank. Please fill them to proceed.");
+        document.getElementById("error-message").textContent = "One or more fields were left blank. Please fill them to proceed.";
         return;
     }
 
@@ -129,14 +121,11 @@ function doRegister() {
 
                 if (userId < 1) {
                     document.getElementById("error-message").textContent = "User already exists.";
-                    alert("User already exists.")
                     return;
                 }
 
                 firstName = jsonObject.firstName;
                 lastName = jsonObject.lastName;
-
-                saveCookie();
 
                 location.reload();
                 alert("Successfully added user!");
@@ -152,42 +141,43 @@ function doRegister() {
 // EVERYTHING BELOW IS BEYOND LOGIN/SIGNUP NEEDS FIXING!!!
 
 
-// ... (your existing code)
-
 function doAddContact() {
+    readCookie();
     let addFirstName = document.getElementById("addFirstName").value;
     let addLastName = document.getElementById("addLastName").value;
     let addPhoneNumber = document.getElementById("addPhoneNumber").value;
     let addEmailAddress = document.getElementById("addEmailAddress").value;
 
     if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
-        document.getElementById("errorMessage").textContent = "One or more fields have been left blank. Please fill them to proceed.";
-        alert("One or more fields have been left blank. Please fill them to proceed.")
+        document.getElementById("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
     if (!validatePhoneNumber(addPhoneNumber)) {
-        document.getElementById("errorMessage").textContent = "Invalid phone number.";
-        alert("Invalid phone number.")
+        document.getElementById("error-message").textContent = "Invalid phone number.";
         return;
     }
 
     if (!validateEmail(addEmailAddress)) {
-        document.getElementById("errorMessage").textContent = "Invalid email. Please enter a valid email address to proceed.";
-        alert("Invalid email. Please enter a valid email address to proceed.")
+        document.getElementById("error-message").textContent = "Invalid email. Please enter a valid email address to proceed.";
         return;
     }
 
     // You can add more validation checks if needed
 
     let addData = {
-        firstName: addFirstName,
-        lastName: addLastName,
-        phoneNumber: addPhoneNumber,
-        emailAddress: addEmailAddress,
+        FirstName:addFirstName,
+		LastName:addLastName,
+		Phone:addPhoneNumber,
+		Email:addEmailAddress,
+		UserId:userId
     };
 
+    console.log(addData);
+
     let jsonPayload = JSON.stringify(addData);
+
+    console.log(jsonPayload);
 
     let url = urlBase + '/AddContact.' + extension;
 
@@ -198,29 +188,23 @@ function doAddContact() {
     try {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                let addResult;
-                try {
-                    addResult = JSON.parse(xhr.responseText);
-                } catch (e) {
-                    console.error("Error parsing JSON response:", e);
-                    alert("Failed to add contact. Please try again.");
-                    return;
-                }
-        
-                if (addResult.success) {
-                    alert("Contact added successfully!");
-                   
-                } else if (addResult.error) {
-                    alert("Failed to add contact: " + addResult.error);
-                } else {
-                    alert("Failed to add contact. Please try again.");
-                }
+                let jsonObject = JSON.parse(xhr.responseText);
+                if(jsonObject.error == ""){
+                    document.getElementById("error-message").innerHTML = "Contact has been added";
+                    document.getElementById("addFirstName").value = "";
+                    document.getElementById("addLastName").value = "";
+                    document.getElementById("addPhoneNumber").value = "";
+                    document.getElementById("addEmailAddress").value = "";
             }
+            else{
+                document.getElementById("error-message").innerHTML = jsonObject.error;
+            }
+        }
         };
 
         xhr.send(jsonPayload);
     } catch (err) {
-        console.error("Add contact failed: " + err.message);
+        document.getElementById("error-message").innerHTML = err.message;
     }
 }
 
@@ -233,8 +217,7 @@ function doUpdateContactInfo() {
     let updateEmail = document.getElementById("updateEmail").value;
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
-        document.getElementById("errorMessage").textContent = "One or more fields have been left blank. Please fill them to proceed.";
-        alert("One or more fields have been left blank. Please fill them to proceed.")
+        document.getElementById("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
         return;
     }
 
@@ -278,38 +261,41 @@ function doUpdateContactInfo() {
 }
 
 
-function saveCookie() {
-    let minutes = 20;
-    let date = new Date();
-    date.setTime(date.getTime() + (minutes * 60 * 1000));
-    document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",userName=" + userName + ",phoneNumber=" + phoneNumber + ",emailAddress=" + emailAddress + ";expires=" + date.toGMTString();
+function saveCookie(){
+	let minutes = 20;
+	let date = new Date();
+	date.setTime(date.getTime()+(minutes*60*1000));	
+	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
 }
 
-function readCookie() {
-    userId = -1;
-    let data = document.cookie;
-    let splits = data.split(",");
-    for (var i = 0; i < splits.length; i++) {
-        let thisOne = splits[i].trim();
-        let tokens = thisOne.split("=");
-        if (tokens[0] == "firstName") {
-            firstName = tokens[1];
-        } else if (tokens[0] == "lastName") {
-            lastName = tokens[1];
-        } else if (tokens[0] == "userId") {
-            userId = parseInt(tokens[1].trim());
-        } else if (tokens[0] == "userName") {
-            userName = tokens[1];
-        } else if (tokens[0] == "phoneNumber") {
-            phoneNumber = tokens[1];
-        } else if (tokens[0] == "emailAddress") {
-            emailAddress = tokens[1];
-        }
-    }
-
-    if (userId < 0) {
-        window.location.href = "index.html";
-    }
+function readCookie()
+{
+	userId = -1;
+	let data = document.cookie;
+	console.log(data);
+	let splits = data.split(",");
+	for(var i = 0; i < splits.length; i++) 
+	{
+		let thisOne = splits[i].trim();
+		let tokens = thisOne.split("=");
+		if( tokens[0] == "firstName" )
+		{
+			firstName = tokens[1];
+		}
+		else if( tokens[0] == "lastName" )
+		{
+			lastName = tokens[1];
+		}
+		else if( tokens[0] == "userId" )
+		{
+			userId = parseInt( tokens[1].trim() );
+		}
+	}
+	
+	if( userId < 0 )
+	{
+		window.location.href = "index.html";
+	}
 }
 
 function doLogout()
