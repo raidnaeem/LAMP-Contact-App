@@ -190,11 +190,20 @@ function doAddContact() {
     try {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                let addResult = JSON.parse(xhr.responseText);
-
+                let addResult;
+                try {
+                    addResult = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    console.error("Error parsing JSON response:", e);
+                    alert("Failed to add contact. Please try again.");
+                    return;
+                }
+        
                 if (addResult.success) {
                     alert("Contact added successfully!");
-                    // You can also update the UI or perform other actions as needed
+                   
+                } else if (addResult.error) {
+                    alert("Failed to add contact: " + addResult.error);
                 } else {
                     alert("Failed to add contact. Please try again.");
                 }
