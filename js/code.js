@@ -2,8 +2,11 @@ const urlBase = 'http://cop4331c-group27.xyz/LAMPAPI';
 const extension = 'php';
 
 let userId = 0;
+let userName = "";
 let firstName = "";
 let lastName = "";
+let phoneNumber = "";
+let emailAddress = "";
 
 function validatePhoneNumber(phone) {
     // Check if phone number has exactly 10 digits
@@ -61,6 +64,7 @@ function doLogin()
 				saveCookie();
 	
 				doHome();
+                console.log("Here");
 			}
 		};
 		xhr.send(jsonPayload);
@@ -81,17 +85,17 @@ function doRegister() {
     let verify = document.getElementById("verifyPassword").value;
 
     if (!validatePassword(password)) {
-        document.getElementById("error-message").textContent = "Invalid password. Please create a password with at least 6 characters and 1 digit.";
+        alert("Invalid password. Password must have a minimum of 6 characters and 1 digit");
         return;
     }
 
     if (password != verify) {
-        document.getElementById("error-message").textContent = "Passwords do not match.";
+		alert("Passwords do not match");
         return;
     }
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
-        document.getElementById("error-message").textContent = "One or more fields were left blank. Please fill them to proceed.";
+        alert("Missing Fields");
         return;
     }
 
@@ -120,12 +124,14 @@ function doRegister() {
                 userId = jsonObject.id;
 
                 if (userId < 1) {
-                    document.getElementById("error-message").textContent = "User already exists.";
+                    alert("User already exists");
                     return;
                 }
 
                 firstName = jsonObject.firstName;
                 lastName = jsonObject.lastName;
+
+                saveCookie();
 
                 location.reload();
                 alert("Successfully added user!");
@@ -141,43 +147,40 @@ function doRegister() {
 // EVERYTHING BELOW IS BEYOND LOGIN/SIGNUP NEEDS FIXING!!!
 
 
+// ... (your existing code)
+
 function doAddContact() {
-    readCookie();
     let addFirstName = document.getElementById("addFirstName").value;
     let addLastName = document.getElementById("addLastName").value;
     let addPhoneNumber = document.getElementById("addPhoneNumber").value;
     let addEmailAddress = document.getElementById("addEmailAddress").value;
 
     if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
-        document.getElementById("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
+        alert("Missing Fields");
         return;
     }
 
     if (!validatePhoneNumber(addPhoneNumber)) {
-        document.getElementById("error-message").textContent = "Invalid phone number.";
+        alert("Invalid phone number (must have 10 digits)");
         return;
     }
 
     if (!validateEmail(addEmailAddress)) {
-        document.getElementById("error-message").textContent = "Invalid email. Please enter a valid email address to proceed.";
+        alert("Invalid email. Please input a valid email address.");
         return;
     }
 
     // You can add more validation checks if needed
 
     let addData = {
-        FirstName:addFirstName,
-		LastName:addLastName,
-		Phone:addPhoneNumber,
-		Email:addEmailAddress,
-		UserId:userId
+        userId: userId,
+        firstName: addFirstName,
+        lastName: addLastName,
+        phoneNumber: addPhoneNumber,
+        emailAddress: addEmailAddress,
     };
 
-    console.log(addData);
-
     let jsonPayload = JSON.stringify(addData);
-
-    console.log(jsonPayload);
 
     let url = urlBase + '/AddContact.' + extension;
 
@@ -188,23 +191,30 @@ function doAddContact() {
     try {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                let jsonObject = JSON.parse(xhr.responseText);
-                if(jsonObject.error == ""){
-                    document.getElementById("error-message").innerHTML = "Contact has been added";
-                    document.getElementById("addFirstName").value = "";
-                    document.getElementById("addLastName").value = "";
-                    document.getElementById("addPhoneNumber").value = "";
-                    document.getElementById("addEmailAddress").value = "";
+                let addResult;
+                try {
+                    addResult = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    console.error("Error parsing JSON response:", e);
+                    alert("Failed to add contact. Please try again.");
+                    return;
+                }
+        
+                if (addResult.success) {
+                    alert("Contact added successfully!");
+                   
+                } else if (addResult.error) {
+                    alert("Failed to add contact: " + addResult.error);
+                } else {
+                    alert("Failed to add contact. Please try again.");
+                }
             }
-            else{
-                document.getElementById("error-message").innerHTML = jsonObject.error;
-            }
-        }
         };
 
         xhr.send(jsonPayload);
+        doHome();
     } catch (err) {
-        document.getElementById("error-message").innerHTML = err.message;
+        console.error("Add contact failed: " + err.message);
     }
 }
 
@@ -217,7 +227,7 @@ function doUpdateContactInfo() {
     let updateEmail = document.getElementById("updateEmail").value;
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
-        document.getElementById("error-message").textContent = "One or more fields have been left blank. Please fill them to proceed.";
+        alert("Empty Field(s)");
         return;
     }
 
@@ -261,42 +271,44 @@ function doUpdateContactInfo() {
 }
 
 
-function saveCookie(){
-	let minutes = 20;
-	let date = new Date();
-	date.setTime(date.getTime()+(minutes*60*1000));	
-	document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ";expires=" + date.toGMTString();
+function saveCookie() {
+    let minutes = 20;
+    let date = new Date();
+    date.setTime(date.getTime() + (minutes * 60 * 1000));
+    document.cookie = "firstName=" + firstName + ",lastName=" + lastName + ",userId=" + userId + ",userName=" + userName + ",phoneNumber=" + phoneNumber + ",emailAddress=" + emailAddress + ";expires=" + date.toGMTString();
 }
 
-function readCookie()
-{
-	userId = -1;
-	let data = document.cookie;
-	console.log(data);
-	let splits = data.split(",");
-	for(var i = 0; i < splits.length; i++) 
-	{
-		let thisOne = splits[i].trim();
-		let tokens = thisOne.split("=");
-		if( tokens[0] == "firstName" )
-		{
-			firstName = tokens[1];
-		}
-		else if( tokens[0] == "lastName" )
-		{
-			lastName = tokens[1];
-		}
-		else if( tokens[0] == "userId" )
-		{
-			userId = parseInt( tokens[1].trim() );
-		}
-	}
-	
-	if( userId < 0 )
-	{
-		window.location.href = "index.html";
-	}
+
+function readCookie() {
+    userId = -1;
+    let data = document.cookie;
+    let splits = data.split(",");
+
+    for (let i = 0; i < splits.length; i++) {
+
+        let thisOne = splits[i].trim();
+        let tokens = thisOne.split("=");
+
+        if (tokens[0] == "firstName") {
+            firstName = tokens[1];
+        }
+        else if (tokens[0] == "lastName") {
+            lastName = tokens[1];
+        }
+        else if (tokens[0] == "userId") {
+            userId = parseInt(tokens[1].trim());
+        }
+    }
+
+    if (userId < 0) {
+        window.location.href = "index.html";
+    }
+
+    else {
+        document.getElementById("weclome-text").innerHTML = "Welcome, " + firstName + " " + lastName + "!";
+    }
 }
+
 
 function doLogout()
 {
@@ -310,25 +322,14 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
-
-function doViewInfo()
-{
-	window.location.href = "info.html";
-}
-
-
 function doAdd()
 {
 	window.location.href = "add.html";
 }
 
-function doSearch()
-{
-	window.location.href = "search.html";
-}
-
 function doHome()
 {
+    loadContacts();
 	window.location.href = "homepage.html";
 }
 
@@ -337,7 +338,7 @@ function doSearchContacts() {
     let search = document.getElementById("search").value;
     
     if (!search) {
-        document.getElementById("error-message").textContent = "Please enter a search query.";
+        alert("Please enter a search query.");
         return;
     }
 
@@ -387,5 +388,47 @@ function displaySearchResults(results) {
         let resultElement = document.createElement("div");
         resultElement.innerHTML = `${contact.firstName} ${contact.lastName} - ${contact.email}`; // Adjust fields as per your contact structure
         searchResultsContainer.appendChild(resultElement);
-    };
+    }
 }
+
+    function loadContacts() {
+        let tmp = {
+            search: "",
+            userId: userId
+        };
+    
+        let jsonPayload = JSON.stringify(tmp);
+    
+        let url = urlBase + '/SearchContacts.' + extension;
+        let xhr = new XMLHttpRequest();
+        xhr.open("POST", url, true);
+        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+    
+        try {
+            xhr.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let jsonObject = JSON.parse(xhr.responseText);
+                    if (jsonObject.error) {
+                        console.log(jsonObject.error);
+                        return;
+                    }
+                    let text = "<table border='1'>"
+                    for (let i = 0; i < jsonObject.results.length; i++) {
+                        ids[i] = jsonObject.results[i].id;
+                        text += "<tr id='row-" + i + "'>";
+                        text += "<td id='first-name-" + i + "'><span>" + jsonObject.results[i].firstName + "</span></td>";
+                        text += "<td id='last-name-" + i + "'><span>" + jsonObject.results[i].lastName + "</span></td>";
+                        text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
+                        text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
+                        text += "<tr/>"
+                    }
+                    text += "</table>"
+                    document.getElementById("table-body").innerHTML = text;
+                }
+            };
+            xhr.send(jsonPayload);
+        } catch (err) {
+            console.log(err.message);
+        }
+    }
+    
