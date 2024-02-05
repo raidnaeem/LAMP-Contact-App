@@ -20,7 +20,7 @@
         .logout-button {
             background-color: #e74c3c;
             border-color: #e74c3c;
-            width: 50%;
+            width: 10%;
             padding: 10px;
             border-radius: 5px;
             color: #fff;
@@ -29,6 +29,9 @@
             text-align: center;
             box-sizing: border-box;
             transition: background-color 0.3s; /* Smooth transition for hover effect */
+            position: absolute;
+            top: 10px;
+            right: 10px;
         }
 
         .logout-button:hover {
@@ -58,10 +61,14 @@
             margin-left: 10px;
         }
 
-        .home-title,
-        .view-title,
+        .add-title {
+            font-size: 24px;
+            margin-bottom: 25px;
+        }
+        
         .search-title {
-            margin-bottom: 10px;
+            font-size: 24px;
+            margin-bottom: 20px;
         }
 
         .home-buttons,
@@ -100,30 +107,51 @@
             margin-bottom: 10px;
         }
 
+        .add-container p {
+            font-size: 16px;
+            margin-bottom: 25px;
+        }
+
         input.search-input {
             width: calc(100% - 20px);
             padding: 10px;
             box-sizing: border-box;
             margin-bottom: 10px;
         }
+
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .contacts-header {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .subheader {
+            display: flex;
+            justify-content: space-between;
+            font-weight: bold;
+            margin-bottom: 10px;
+            width: 100%;
+        }
+
+        .subheader-item {
+            flex: 1;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
 
     <button class="logout-button" onclick="doLogout()">Logout</button>
-    <h2 class="view-title">Welcome to Our Site!</h2>
+    <h2 class="view-title" id="welcome"></h2>
     <div class="panel-container">
-        <div class="view-container">
-            <h2 class="view-title">View Contacts</h2>
-            <p>Want to Check Your Contact Information?</p>
-            <div class="view-buttons">
-                <button class="view-button" onclick="doViewInfo()">View</button>
-            </div>
-        </div>
-
         <div class="add-container">
             <h2 class="add-title">Add Contacts</h2>
-            <p>Need to Add Any New Contacts?</p>
+            <p>Need to add any new contacts?</p>
             <div class="add-buttons">
                 <button class="add-button" onclick="doAdd()">Add</button>
             </div>
@@ -131,14 +159,35 @@
 
         <div class="search-container">
             <h2 class="search-title">Search Contacts</h2>
-            <p>Need to Find A Contact Information?</p>
+            <input type="text" id="searchInput" class="search-input" placeholder="Enter search terms (First Name, Last Name, etc.)">
             <div class="search-buttons">
-                <button onclick="doSearch()">Search</button>
+                <button onclick="doSearchContacts()">Search</button>
             </div>
         </div>
     </div>
     <div id="searchResults"></div>
 
+    <div class="table">
+        <div class="table-content" id="contact-table">
+            <table id="contacts" cellpadding="0" cellspacing="0" border="0">
+                <thread>
+                    <tr>
+                        <th>First&nbspName  </th>
+                        <th>Last&nbspName   </th>
+                        <th>Email   </th>
+                        <th>Phone   </th>
+                        <th></th>
+                    </tr>
+                </thread>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        readCookie();
+        loadContacts();
+    </script>
 
 </body>
 </html>
