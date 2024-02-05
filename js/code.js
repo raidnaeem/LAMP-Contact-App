@@ -64,7 +64,6 @@ function doLogin()
 				saveCookie();
 	
 				doHome();
-                console.log("Here");
 			}
 		};
 		xhr.send(jsonPayload);
@@ -305,7 +304,7 @@ function readCookie() {
     }
 
     else {
-        document.getElementById("weclome-text").innerHTML = "Welcome, " + firstName + " " + lastName + "!";
+        document.getElementById("welcome").innerHTML = "Welcome, " + firstName + " " + lastName + "!";
     }
 }
 
@@ -335,7 +334,7 @@ function doHome()
 
 
 function doSearchContacts() {
-    let search = document.getElementById("search").value;
+    let search = document.getElementById("searchInput").value;
     
     if (!search) {
         alert("Please enter a search query.");
@@ -345,8 +344,12 @@ function doSearchContacts() {
     // Example API endpoint for searching contacts
     let url = urlBase + '/SearchContact.' + extension;
 
-    let searchData = { search: search };
-    let jsonPayload = JSON.stringify(searchData);
+    let tmp = {
+        search: search,
+        userId: userId
+    };
+
+    let jsonPayload = JSON.stringify(tmp);
 
     let xhr = new XMLHttpRequest();
     xhr.open("POST", url, true);
@@ -355,39 +358,29 @@ function doSearchContacts() {
     try {
         xhr.onreadystatechange = function () {
             if (this.readyState == 4 && this.status == 200) {
-                let searchResults = JSON.parse(xhr.responseText);
-
-                // Handle search results, for example, display them on the page
-                displaySearchResults(searchResults);
+                let jsonObject = JSON.parse(xhr.responseText);
+                    if (jsonObject.error) {
+                        console.log(jsonObject.error);
+                        return;
+                    }
+                    let text = "<table border='1'>"
+                    for (let i = 0; i < jsonObject.results.length; i++) {
+                        ids[i] = jsonObject.results[i].id;
+                        text += "<tr id='row-" + i + "'>";
+                        text += "<td id='first-name-" + i + "'><span>" + jsonObject.results[i].firstName + "</span></td>";
+                        text += "<td id='last-name-" + i + "'><span>" + jsonObject.results[i].lastName + "</span></td>";
+                        text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
+                        text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
+                        text += "<tr/>"
+                    }
+                    text += "</table>"
+                    document.getElementById("table-body").innerHTML = text;
             }
         };
 
         xhr.send(jsonPayload);
     } catch (err) {
         console.error("Search failed: " + err.message);
-    }
-}
-
-
-function displaySearchResults(results) {
-    // Assuming you have an element with the id "searchResults" to display the results
-    let searchResultsContainer = document.getElementById("searchResults");
-
-    // Clear previous search results
-    searchResultsContainer.innerHTML = "";
-
-    if (results.length === 0) {
-        searchResultsContainer.innerHTML = "No results found.";
-        return;
-    }
-
-    // Iterate through the results and display them
-    for (let i = 0; i < results.length; i++) {
-        let contact = results[i];
-
-        let resultElement = document.createElement("div");
-        resultElement.innerHTML = `${contact.firstName} ${contact.lastName} - ${contact.email}`; // Adjust fields as per your contact structure
-        searchResultsContainer.appendChild(resultElement);
     }
 }
 
