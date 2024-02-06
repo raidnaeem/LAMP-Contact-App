@@ -8,21 +8,23 @@ let lastName = "";
 let phoneNumber = "";
 let emailAddress = "";
 
+
 function validatePhoneNumber(phone) {
     // Check if phone number has exactly 10 digits
     return /^\d{10}$/.test(phone);
 }
+
 
 function validatePassword(password) {
     // Check if password has at least 6 characters and at least one number
     return /^(?=.*\d)(?=.*[a-zA-Z]).{6,}$/.test(password);
 }
 
+
 function validateEmail(emailAddress) {
     return /^([a-zA-Z0-9._-]+)@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(emailAddress);
 }
 
-// LOGIN AND SIGNUP COMPLETE
 
 function doLogin()
 {
@@ -61,6 +63,8 @@ function doLogin()
 				firstName = jsonObject.firstName;
 				lastName = jsonObject.lastName;
 
+                console.log(userId);
+
 				saveCookie();
 	
 				doHome();
@@ -94,7 +98,7 @@ function doRegister() {
     }
 
     if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" ) {
-        alert("Missing Fields");
+        alert("Missing Field(s)");
         return;
     }
 
@@ -143,19 +147,16 @@ function doRegister() {
 }
 
 
-// EVERYTHING BELOW IS BEYOND LOGIN/SIGNUP NEEDS FIXING!!!
-
-
-// ... (your existing code)
-
 function doAddContact() {
+    readCookieAdd();
+    console.log(userId);
     let addFirstName = document.getElementById("addFirstName").value;
     let addLastName = document.getElementById("addLastName").value;
     let addPhoneNumber = document.getElementById("addPhoneNumber").value;
     let addEmailAddress = document.getElementById("addEmailAddress").value;
 
     if (addFirstName === "" || addLastName === "" || addPhoneNumber === "" || addEmailAddress === "") {
-        alert("Missing Fields");
+        alert("Missing Field(s)");
         return;
     }
 
@@ -218,25 +219,35 @@ function doAddContact() {
 }
 
 
-function doUpdateContactInfo() {
-	let updateUserName = document.getElementById("updateUserName").value;
+function doUpdateContactInfo(contactId) {
+    readCookieAdd();
+    
     let updateFirstName = document.getElementById("updateFirstName").value;
     let updateLastName = document.getElementById("updateLastName").value;
 	let updatePhone = document.getElementById("updatePhone").value;
     let updateEmail = document.getElementById("updateEmail").value;
 
-    if (firstName == "" || lastName == "" || login == "" || password == "" || verify == "" || phoneNumber == "" || emailAddress == "") {
+    if (updateFirstName == "" || updateLastName == "" || updatePhone == "" || updateEmail == "") {
         alert("Empty Field(s)");
         return;
     }
 
+    if (!validatePhoneNumber(updatePhone)) {
+        alert("Invalid phone number (must have 10 digits)");
+        return;
+    }
+
+    if (!validateEmail(updateEmail)) {
+        alert("Invalid email. Please input a valid email address.");
+        return;
+    }
+
     let updateData = {
-        userId: userId,
-		userName: updateUserName,
         firstName: updateFirstName,
         lastName: updateLastName,
-		phoneNumber: updatePhone,
-		emailAddress: updateEmail
+        email: updateEmail,
+		phone: updatePhone,
+        id: contactId
     };
 
     let jsonPayload = JSON.stringify(updateData);
@@ -254,16 +265,13 @@ function doUpdateContactInfo() {
 
                 if (updateResult.success) {
                     alert("Contact information updated successfully!");
-                    doViewInfo();
-
-                    // You can also redirect to the home page or perform other actions as needed
-                } else {
-                    alert("Failed to update contact information. Please try again.");
+                    doHome();
                 }
             }
         };
 
         xhr.send(jsonPayload);
+        doHome();
     } catch (err) {
         console.error("Update failed: " + err.message);
     }
@@ -308,6 +316,32 @@ function readCookie() {
     }
 }
 
+function readCookieAdd() {
+    userId = -1;
+    let data = document.cookie;
+    let splits = data.split(",");
+
+    for (let i = 0; i < splits.length; i++) {
+
+        let thisOne = splits[i].trim();
+        let tokens = thisOne.split("=");
+
+        if (tokens[0] == "firstName") {
+            firstName = tokens[1];
+        }
+        else if (tokens[0] == "lastName") {
+            lastName = tokens[1];
+        }
+        else if (tokens[0] == "userId") {
+            userId = parseInt(tokens[1].trim());
+        }
+    }
+
+    if (userId < 0) {
+        window.location.href = "index.html";
+    }
+}
+
 
 function doLogout()
 {
@@ -321,16 +355,19 @@ function doLogout()
 	window.location.href = "index.html";
 }
 
+
 function doAdd()
 {
 	window.location.href = "add.html";
 }
+
 
 function doHome()
 {
     loadContacts();
 	window.location.href = "homepage.html";
 }
+
 
 
 function doSearchContacts() {
@@ -365,12 +402,13 @@ function doSearchContacts() {
                     }
                     let text = "<table border='1'>"
                     for (let i = 0; i < jsonObject.results.length; i++) {
-                        ids[i] = jsonObject.results[i].id;
                         text += "<tr id='row-" + i + "'>";
                         text += "<td id='first-name-" + i + "'><span>" + jsonObject.results[i].firstName + "</span></td>";
                         text += "<td id='last-name-" + i + "'><span>" + jsonObject.results[i].lastName + "</span></td>";
                         text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
                         text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
+                        text += "<td><button onclick='doDeleteContact(" + jsonObject.results[i].id + ")'>Delete</button></td>";
+                        text += "<td><button onclick=' doUpdateContactInfo(" + jsonObject.results[i].id + ")'>Edit</button></td>";
                         text += "<tr/>"
                     }
                     text += "</table>"
@@ -384,44 +422,85 @@ function doSearchContacts() {
     }
 }
 
-    function loadContacts() {
-        let tmp = {
-            search: "",
-            userId: userId
-        };
-    
-        let jsonPayload = JSON.stringify(tmp);
-    
-        let url = urlBase + '/SearchContacts.' + extension;
-        let xhr = new XMLHttpRequest();
-        xhr.open("POST", url, true);
-        xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
-    
-        try {
-            xhr.onreadystatechange = function () {
-                if (this.readyState == 4 && this.status == 200) {
-                    let jsonObject = JSON.parse(xhr.responseText);
-                    if (jsonObject.error) {
-                        console.log(jsonObject.error);
-                        return;
-                    }
-                    let text = "<table border='1'>"
-                    for (let i = 0; i < jsonObject.results.length; i++) {
-                        ids[i] = jsonObject.results[i].id;
-                        text += "<tr id='row-" + i + "'>";
-                        text += "<td id='first-name-" + i + "'><span>" + jsonObject.results[i].firstName + "</span></td>";
-                        text += "<td id='last-name-" + i + "'><span>" + jsonObject.results[i].lastName + "</span></td>";
-                        text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
-                        text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
-                        text += "<tr/>"
-                    }
-                    text += "</table>"
-                    document.getElementById("table-body").innerHTML = text;
+
+    // Add this function to handle contact deletion
+function doDeleteContact(contactId) {
+
+    let deleteData = {
+        contactId: contactId,
+        userId: userId
+    };
+
+    let jsonPayload = JSON.stringify(deleteData);
+
+    let url = urlBase + '/DeleteContact.' + extension;
+
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let deleteResult = JSON.parse(xhr.responseText);
+
+                if (deleteResult.success) {
+                    alert("Contact deleted successfully!");
+                    loadContacts(); // Reload the contacts after deletion
+
                 }
-            };
-            xhr.send(jsonPayload);
-        } catch (err) {
-            console.log(err.message);
-        }
+            }
+        };
+
+        xhr.send(jsonPayload);
+        doHome();
+    } catch (err) {
+        console.error("Delete contact failed: " + err.message);
     }
-    
+}
+
+
+function loadContacts() {
+    let tmp = {
+        search: "",
+        userId: userId
+    };
+
+    readCookieAdd();
+
+    let jsonPayload = JSON.stringify(tmp);
+
+    let url = urlBase + '/SearchContact.' + extension;
+    let xhr = new XMLHttpRequest();
+    xhr.open("POST", url, true);
+    xhr.setRequestHeader("Content-type", "application/json; charset=UTF-8");
+
+    try {
+        xhr.onreadystatechange = function () {
+            if (this.readyState == 4 && this.status == 200) {
+                let jsonObject = JSON.parse(xhr.responseText);
+                if (jsonObject.error) {
+                    console.log(jsonObject.error);
+                    return;
+                }
+                let text = "<table border='1'>"
+                for (let i = 0; i < jsonObject.results.length; i++) {
+                    text += "<tr id='row-" + i + "'>";
+                    text += "<td id='first-name-" + i + "'><span>" + jsonObject.results[i].firstName + "</span></td>";
+                    text += "<td id='last-name-" + i + "'><span>" + jsonObject.results[i].lastName + "</span></td>";
+                    text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
+                    text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
+                    text += "<td><button onclick='doDeleteContact(" + jsonObject.results[i].id + ")'>Delete</button></td>";
+                    text += "<td><button onclick=' doUpdateContactInfo(" + jsonObject.results[i].id + ")'>Edit</button></td>";
+                    text += "<tr/>"
+                }
+
+                text += "</table>"
+                document.getElementById("table-body").innerHTML = text;
+            }
+        };
+        xhr.send(jsonPayload);
+    } catch (err) {
+        console.log(err.message);
+    }
+}
