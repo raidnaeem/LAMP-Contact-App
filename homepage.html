@@ -9,47 +9,37 @@
     <style>
         body {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            margin: 0;
+            align-items: flex-start; /* Align items to the start of the flex container */
             font-family: Arial, sans-serif;
+            margin: 0;
         }
 
         .logout-button {
             background-color: #e74c3c;
             border-color: #e74c3c;
-            width: 10%;
             padding: 10px;
             border-radius: 5px;
             color: #fff;
             cursor: pointer;
             margin-bottom: 10px;
             text-align: center;
-            box-sizing: border-box;
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
-            position: absolute;
-            top: 10px;
-            right: 10px;
+            transition: background-color 0.3s;
+            margin-top: 10px;
+            width: 50%;
         }
 
         .logout-button:hover {
-            background-color: #c0392b; /* Darker red color on hover */
+            background-color: #c0392b;
         }
 
         .panel-container {
             display: flex;
-            justify-content: space-between;
-            width: 800px;
-            margin-top: 20px;
+            flex-direction: column; /* Stack panels vertically */
+            width: 370px; /* Set width of panel container */
+            margin-left: 10px;
         }
 
-        .home-container,
-        .add-container,
-        .view-container,
-        .search-container {
-            width: 48%;
+        .panel {
             text-align: center;
             padding: 20px;
             border: 1px solid #ccc;
@@ -57,24 +47,19 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
             box-sizing: border-box;
-            margin-right: 10px;
-            margin-left: 10px;
         }
 
-        .add-title {
+        .panel h2 {
             font-size: 24px;
-            margin-bottom: 25px;
-        }
-        
-        .search-title {
-            font-size: 24px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        .home-buttons,
-        .search-buttons,
-        .add-buttons,
-        .view-buttons {
+        .panel p {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+
+        .buttons-container {
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -90,38 +75,32 @@
             font-size: 16px;
             cursor: pointer;
             margin-bottom: 10px;
-            transition: background-color 0.3s; /* Smooth transition for hover effect */
+            transition: background-color 0.3s;
         }
 
         button:hover {
-            background-color: #4682b4; /* Lighter color on hover */
-        }
-
-        button.view-button,
-        button.add-button {
-            width: 100%;
-        }
-
-        p {
-            font-size: 14px;
-            margin-bottom: 10px;
-        }
-
-        .add-container p {
-            font-size: 16px;
-            margin-bottom: 25px;
+            background-color: #4682b4;
         }
 
         input.search-input {
-            width: calc(100% - 20px);
+            width: 100%;
             padding: 10px;
             box-sizing: border-box;
             margin-bottom: 10px;
         }
 
-        .footer {
-            margin-top: 20px;
-            text-align: center;
+        .table {
+            flex: 1; /* Fill remaining space */
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        #table-body {
+            text-align: center; /* Center the text in the table body */
+        }
+
+        .table-content {
+            overflow-x: auto;
         }
 
         .contacts-header {
@@ -130,59 +109,116 @@
             margin-bottom: 10px;
         }
 
-        .subheader {
-            display: flex;
-            justify-content: space-between;
-            font-weight: bold;
-            margin-bottom: 10px;
+        #contacts {
             width: 100%;
+            border-collapse: collapse;
         }
 
-        .subheader-item {
+        #contacts th,
+        #contacts td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        #contacts th {
+            background-color: #f2f2f2;
+        }
+
+        .user-info-field {
+            display: flex;
+            justify-content: flex-end; /* Align items to the right */
+            margin-bottom: 10px;
+            text-align: right; /* Align text to the right */
+        }
+
+        label {
+            font-weight: bold;
+            margin-right: 10px;
             flex: 1;
-            text-align: center;
+        }
+
+        input {
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .user-info-field input {
+            box-sizing: border-box;
+        }
+
+        .view-title{
+            margin-top: 50px;
+            font-size: 30px;
         }
     </style>
 </head>
 <body>
 
-    <button class="logout-button" onclick="doLogout()">Logout</button>
-    <h2 class="view-title" id="welcome"></h2>
     <div class="panel-container">
-        <div class="add-container">
+        <button class="logout-button" onclick="doLogout()">Logout</button>
+        <div class="panel">
             <h2 class="add-title">Add Contacts</h2>
             <p>Need to add any new contacts?</p>
-            <div class="add-buttons">
+            <div class="buttons-container">
                 <button class="add-button" onclick="doAdd()">Add</button>
             </div>
         </div>
 
-        <div class="search-container">
+        <div class="panel">
             <h2 class="search-title">Search Contacts</h2>
-            <input type="text" id="searchInput" class="search-input" placeholder="Enter search terms (First Name, Last Name, etc.)">
-            <div class="search-buttons">
+            <input type="text" id="searchInput" class="search-input" placeholder="Enter search terms">
+            <div class="buttons-container">
                 <button onclick="doSearchContacts()">Search</button>
             </div>
         </div>
+
+        <div class="panel">
+            <h2 class="update-title">Update Contact</h2>
+            <div class="buttons-container">
+                <div class="user-info-field">
+                    <label for="updateFirstName">First Name:</label>
+                    <input type="text" id="updateFirstName" name="updateFirstName" placeholder="Enter new first name">
+                </div>
+    
+                <div class="user-info-field">
+                    <label for="updateLastName">Last Name:</label>
+                    <input type="text" id="updateLastName" name="updateLastName" placeholder="Enter new last name">
+                </div>
+    
+                <div class="user-info-field">
+                    <label for="updatePhone">Phone:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                    <input type="text" id="updatePhone" name="updatePhone" placeholder="Enter new phone">
+                </div>
+    
+                <div class="user-info-field">
+                    <label for="updateEmail">Email:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                    <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
+                </div>
+            </div>
+        </div>
+
     </div>
-    <div id="searchResults"></div>
 
     <div class="table">
         <div class="table-content" id="contact-table">
-            <table id="contacts" cellpadding="0" cellspacing="0" border="0">
-                <thread>
+            <h2 class="view-title" id="welcome"></h2>
+            <table id="contacts">
+                <thead>
                     <tr>
-                        <th>First&nbspName  </th>
-                        <th>Last&nbspName   </th>
-                        <th>Email   </th>
-                        <th>Phone   </th>
-                        <th></th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Delete</th>
+                        <th>Edit</th>
                     </tr>
-                </thread>
+                </thead>
                 <tbody id="table-body"></tbody>
             </table>
         </div>
     </div>
+
+    <div id="searchResults"></div>
 
     <script>
         readCookie();
