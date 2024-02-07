@@ -5,20 +5,71 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="text/javascript" src="js/md5.js"></script>
     <script type="text/javascript" src="js/code.js"></script>
+
     <title>Home Page</title>
     <style>
+
+        @font-face {
+            font-family: 'DMSans-Regular';
+            src: url('DMSans-Regular.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'DMSans-Medium';
+            src: url('DMSans-Medium.ttf') format('truetype');
+        }
+
+        @font-face {
+            font-family: 'DMSans-Bold';
+            src: url('DMSans-Bold.ttf') format('truetype');
+        }
+
         body {
             display: flex;
             align-items: flex-start; /* Align items to the start of the flex container */
-            font-family: Arial, sans-serif;
+            font-family: 'DMSans-Medium', sans-serif;
             margin: 0;
         }
 
+        .sidebar {
+            width: 390px; /* Adjust the width as needed */
+            background-color: #f2f2f2; /* Sidebar background color */
+            border-right: black;
+            height: calc(100vh - 20px);
+            position: fixed;
+            overflow-y: scroll;
+            padding-top: 20px;
+            font-family: 'DMSans-Medium', sans-serif;
+            z-index: 0;
+        }
+
+         /* width */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        /* Handle */
+        ::-webkit-scrollbar-thumb {
+            background: #b1b1b1;
+        }
+        
+        /* Handle on hover */
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        } 
+
+        .sidebar-header {
+            width: 390px;
+            background-image: url('"C:\Users\naeem\Documents\UCF\POOSD\LAMP-styling\g27-logo.png"');
+            background-repeat: no-repeat;
+        }
+        
         .logout-button {
             background-color: #e74c3c;
             border-color: #e74c3c;
             padding: 10px;
             border-radius: 5px;
+            box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.1);
             color: #fff;
             cursor: pointer;
             margin-bottom: 10px;
@@ -26,6 +77,7 @@
             transition: background-color 0.3s;
             margin-top: 10px;
             width: 50%;
+            font-family: 'DMSans-Bold', sans-serif;
         }
 
         .logout-button:hover {
@@ -35,34 +87,47 @@
         .panel-container {
             display: flex;
             flex-direction: column; /* Stack panels vertically */
-            width: 370px; /* Set width of panel container */
-            margin-left: 10px;
+            width: 350px; /* Set width of panel container */
+            margin-left: 20px;
+            color: #fff;
+            z-index: 1;
+            font-family: 'DMSans-Medium', sans-serif;
         }
 
         .panel {
             text-align: center;
             padding: 20px;
-            border: 1px solid #ccc;
-            border-radius: 8px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            box-shadow: 2px 5px 10px rgba(0, 0, 0, 0.15);
             margin-bottom: 20px;
             box-sizing: border-box;
+            background-color: #fff;
+            z-index: 2;
+            font-family: 'DMSans-Medium', sans-serif;
         }
 
         .panel h2 {
             font-size: 24px;
             margin-bottom: 15px;
+            color: black;
+            z-index: 2;
+            font-family: 'DMSans-Medium', sans-serif;
         }
 
         .panel p {
             font-size: 16px;
             margin-bottom: 15px;
+            z-index: 2;
+            font-family: 'DMSans-Medium', sans-serif;
         }
 
         .buttons-container {
             display: flex;
             flex-direction: column;
             align-items: center;
+            color: black;
+            z-index: 2;
+            font-family: 'DMSans-Bold', sans-serif;
         }
 
         button {
@@ -76,6 +141,8 @@
             cursor: pointer;
             margin-bottom: 10px;
             transition: background-color 0.3s;
+            z-index: 3;
+            font-family: 'DMSans-Bold', sans-serif;
         }
 
         button:hover {
@@ -87,41 +154,50 @@
             padding: 10px;
             box-sizing: border-box;
             margin-bottom: 10px;
+            font-family: 'DMSans-Medium', sans-serif;
         }
 
         .table {
             flex: 1; /* Fill remaining space */
             padding: 20px;
             box-sizing: border-box;
+            margin-left: 400px;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         #table-body {
             text-align: center; /* Center the text in the table body */
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         .table-content {
             overflow-x: auto;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         .contacts-header {
             font-size: 24px;
             font-weight: bold;
             margin-bottom: 10px;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         #contacts {
             width: 100%;
             border-collapse: collapse;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         #contacts th,
         #contacts td {
             border: 1px solid #ddd;
             padding: 8px;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         #contacts th {
             background-color: #f2f2f2;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         .user-info-field {
@@ -129,12 +205,14 @@
             justify-content: flex-end; /* Align items to the right */
             margin-bottom: 10px;
             text-align: right; /* Align text to the right */
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         label {
             font-weight: bold;
             margin-right: 10px;
             flex: 1;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         input {
@@ -144,6 +222,7 @@
 
         .user-info-field input {
             box-sizing: border-box;
+            font-family: 'DMSans-Regular', sans-serif;
         }
 
         .view-title{
@@ -152,52 +231,58 @@
         }
     </style>
 </head>
+
 <body>
 
-    <div class="panel-container">
-        <button class="logout-button" onclick="doLogout()">Logout</button>
-        <div class="panel">
-            <h2 class="add-title">Add Contacts</h2>
-            <p>Need to add any new contacts?</p>
-            <div class="buttons-container">
-                <button class="add-button" onclick="doAdd()">Add</button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2 class="search-title">Search Contacts</h2>
-            <input type="text" id="searchInput" class="search-input" placeholder="Enter search terms">
-            <div class="buttons-container">
-                <button onclick="doSearchContacts()">Search</button>
-            </div>
-        </div>
-
-        <div class="panel">
-            <h2 class="update-title">Update Contact</h2>
-            <div class="buttons-container">
-                <div class="user-info-field">
-                    <label for="updateFirstName">First Name:</label>
-                    <input type="text" id="updateFirstName" name="updateFirstName" placeholder="Enter new first name">
-                </div>
+    <div class="sidebar">
+        <div class="panel-container">
     
-                <div class="user-info-field">
-                    <label for="updateLastName">Last Name:</label>
-                    <input type="text" id="updateLastName" name="updateLastName" placeholder="Enter new last name">
-                </div>
-    
-                <div class="user-info-field">
-                    <label for="updatePhone">Phone:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-                    <input type="text" id="updatePhone" name="updatePhone" placeholder="Enter new phone">
-                </div>
-    
-                <div class="user-info-field">
-                    <label for="updateEmail">Email:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
-                    <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
+            <div class="panel">
+                <h2 class="search-title">Search Contacts</h2>
+                <input type="text" id="searchInput" class="search-input" placeholder="Enter search terms">
+                <div class="buttons-container">
+                    <button onclick="doSearchContacts()">SEARCH</button>
                 </div>
             </div>
-        </div>
+    
+            <div class="panel">
+                <h2 class="add-title">Add Contacts</h2>
+                <div class="buttons-container">
+                    <button class="add-button" onclick="doAdd()">ADD</button>
+                </div>
+            </div>
+    
+    
+            <div class="panel">
+                <h2 class="update-title">Update Contact</h2>
+                <div class="buttons-container">
+                    <div class="user-info-field">
+                        <label for="updateFirstName">First Name:</label>
+                        <input type="text" id="updateFirstName" name="updateFirstName" placeholder="Enter new first name">
+                    </div>
+        
+                    <div class="user-info-field">
+                        <label for="updateLastName">Last Name:</label>
+                        <input type="text" id="updateLastName" name="updateLastName" placeholder="Enter new last name">
+                    </div>
+        
+                    <div class="user-info-field">
+                        <label for="updatePhone">Phone:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                        <input type="text" id="updatePhone" name="updatePhone" placeholder="Enter new phone">
+                    </div>
+        
+                    <div class="user-info-field">
+                        <label for="updateEmail">Email:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
+                        <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
+                    </div>
+                </div>
+            </div>
 
+            <button class="logout-button" onclick="doLogout()">LOGOUT</button>
+        </div>
     </div>
+
+    
 
     <div class="table">
         <div class="table-content" id="contact-table">
@@ -205,12 +290,12 @@
             <table id="contacts">
                 <thead>
                     <tr>
-                        <th>First Name</th>
-                        <th>Last Name</th>
-                        <th>Email</th>
-                        <th>Phone</th>
-                        <th>Delete</th>
-                        <th>Edit</th>
+                        <th>FIRST NAME</th>
+                        <th>LAST NAME</th>
+                        <th>EMAIL</th>
+                        <th>PHONE</th>
+                        <th>DELETE</th>
+                        <th>EDIT</th>
                     </tr>
                 </thead>
                 <tbody id="table-body"></tbody>
