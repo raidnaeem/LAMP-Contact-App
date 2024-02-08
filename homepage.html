@@ -229,6 +229,49 @@
             margin-top: 50px;
             font-size: 30px;
         }
+
+        .panel-update {
+            display: none; 
+            position: fixed; 
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%); 
+            width: 80%; 
+            max-width: 525px; 
+            height: 336px;
+            z-index: 1000; 
+            position: relative;
+
+    
+    }
+
+        .modal-show {
+            display: block; 
+        }
+
+
+        .modal-backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.5); 
+            z-index: 999; 
+            display: none; 
+        
+            
+        }
+    
+        .cancel-btn-modal-par{
+            position: absolute;
+            top: 13px;
+            right: 11px;
+        }
+    
+        .cancel-btn-modal{
+            width: auto;
+        }
     </style>
 </head>
 
@@ -253,8 +296,12 @@
             </div>
     
     
-            <div class="panel">
+            <div class="modal-backdrop" id="modal-backdrop">
+            <div class="panel panel-update" id="panel-update">
                 <h2 class="update-title">Update Contact</h2>
+                <div class="cancel-btn-modal-par">
+                    <button class="cancel-btn-modal" onclick="closeModal()">X</button>
+                </div>
                 <div class="buttons-container">
                     <div class="user-info-field">
                         <label for="updateFirstName">First Name:</label>
@@ -275,8 +322,15 @@
                         <label for="updateEmail">Email:&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp</label>
                         <input type="text" id="updateEmail" name="updateEmail" placeholder="Enter new email">
                     </div>
+                    <input type="hidden" id="updateContactId" name="updateContactId">
+
+
+                    <button onclick="doUpdateContactInfo(getContactIdForUpdate())">SAVE</button>
+
                 </div>
             </div>
+
+        </div>
 
             <button class="logout-button" onclick="doLogout()">LOGOUT</button>
         </div>
