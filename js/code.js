@@ -491,7 +491,7 @@ function loadContacts() {
                     text += "<td id='email-" + i + "'><span>" + jsonObject.results[i].email + "</span></td>";
                     text += "<td id='phone-" + i + "'><span>" + jsonObject.results[i].phone + "</span></td>";
                     text += "<td><button onclick='doDeleteContact(" + jsonObject.results[i].id + ")'>Delete</button></td>";
-                    text += "<td><button onclick=' doUpdateContactInfo(" + jsonObject.results[i].id + ")'>Edit</button></td>";
+                    text += "<td><button onclick=' showEditContactModal(" + jsonObject.results[i].id + ")'>Edit</button></td>";
                     text += "<tr/>"
                 }
 
@@ -503,4 +503,21 @@ function loadContacts() {
     } catch (err) {
         console.log(err.message);
     }
+}
+
+function showEditContactModal(contactId) {
+
+    document.getElementById("updateContactId").value = contactId;
+    document.getElementById('panel-update').classList.add('modal-show');
+    document.getElementById('modal-backdrop').style.display = 'block';
+}
+
+
+function closeModal() {
+    document.getElementById('panel-update').classList.remove('modal-show');
+    document.getElementById('modal-backdrop').style.display = 'none';
+}
+
+function getContactIdForUpdate() {
+    return document.getElementById("updateContactId").value;
 }
